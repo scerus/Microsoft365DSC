@@ -107,7 +107,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $RTPEnabled,
+        $RtpEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -132,7 +132,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $TPMRequired,
+        $TpmRequired,
 
         [Parameter()]
         [System.String]
@@ -165,12 +165,17 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("v1.0", "beta")]
+        $ProfileName = "v1.0"
     )
 
     Write-Verbose -Message "Checking for the Intune Device Compliance Windows 10 Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters -ProfileName $ProfileName
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
@@ -223,13 +228,13 @@ function Get-TargetResource
             DefenderEnabled                             = $devicePolicy.AdditionalProperties.defenderEnabled
             DefenderVersion                             = $devicePolicy.AdditionalProperties.defenderVersion
             SignatureOutOfDate                          = $devicePolicy.AdditionalProperties.signatureOutOfDate
-            RTPEnabled                                  = $devicePolicy.AdditionalProperties.rtpEnabled
+            RtpEnabled                                  = $devicePolicy.AdditionalProperties.rtpEnabled
             AntivirusRequired                           = $devicePolicy.AdditionalProperties.antivirusRequired
             AntiSpywareRequired                         = $devicePolicy.AdditionalProperties.antiSpywareRequired
             DeviceThreatProtectionEnabled               = $devicePolicy.AdditionalProperties.deviceThreatProtectionEnabled
             DeviceThreatProtectionRequiredSecurityLevel = $devicePolicy.AdditionalProperties.deviceThreatProtectionRequiredSecurityLevel
             ConfigurationManagerComplianceRequired      = $devicePolicy.AdditionalProperties.configurationManagerComplianceRequired
-            TPMRequired                                 = $devicePolicy.AdditionalProperties.tPMRequired
+            TpmRequired                                 = $devicePolicy.AdditionalProperties.tPMRequired
             DeviceCompliancePolicyScript                = $devicePolicy.AdditionalProperties.deviceCompliancePolicyScript
             ValidOperatingSystemBuildRanges             = $devicePolicy.AdditionalProperties.validOperatingSystemBuildRanges
             Ensure                                      = 'Present'
@@ -375,7 +380,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $RTPEnabled,
+        $RtpEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -400,7 +405,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $TPMRequired,
+        $TpmRequired,
 
         [Parameter()]
         [System.String]
@@ -433,12 +438,17 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("v1.0", "beta")]
+        $ProfileName = "v1.0"
     )
 
     Write-Verbose -Message "Intune Device Compliance Windows 10 Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters -ProfileName $ProfileName
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
@@ -615,7 +625,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $RTPEnabled,
+        $RtpEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -640,7 +650,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $TPMRequired,
+        $TpmRequired,
 
         [Parameter()]
         [System.String]
@@ -732,10 +742,15 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("v1.0", "beta")]
+        $ProfileName = "v1.0"
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters -ProfileName $ProfileName
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
