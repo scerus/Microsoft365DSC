@@ -11,7 +11,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion     = '1.21.1117.2'
+    ModuleVersion     = '1.21.1013.2'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -51,6 +51,7 @@
 
     # Modules that must be imported into the global environment prior to importing this module
     RequiredModules   = @(
+<<<<<<< HEAD
         @{
             ModuleName      = "DSCParser"
             RequiredVersion = "1.3.0.2"
@@ -127,6 +128,87 @@
             ModuleName      = "ReverseDSC"
             RequiredVersion = "2.0.0.7"
         }
+=======
+
+        #TODO All this can be uncommented again once the module is hosted on powersehllgallery. For local installation EternalModuleDependencies are needed.
+
+        # @{
+        #     ModuleName      = "DSCParser"
+        #     RequiredVersion = "1.3.0.0"
+        # },
+        # @{
+        #     ModuleName      = "ExchangeOnlineManagement"
+        #     RequiredVersion = "2.0.5"
+        # },
+        # @{
+        #     ModuleName      = "Microsoft.Graph.Applications"
+        #     RequiredVersion = "1.8.0"
+        # },
+        # @{
+        #     ModuleName      = "Microsoft.Graph.Authentication"
+        #     RequiredVersion = "1.8.0"
+        # },
+        # @{
+        #     ModuleName      = "Microsoft.Graph.DeviceManagement"
+        #     RequiredVersion = "1.8.0"
+        # },
+        # @{
+        #     ModuleName      = "Microsoft.Graph.DeviceManagement.Administration"
+        #     RequiredVersion = "1.8.0"
+        # },
+        # @{
+        #     ModuleName      = "Microsoft.Graph.DeviceManagement.Enrolment"
+        #     RequiredVersion = "1.8.0"
+        # },
+        # @{
+        #     ModuleName      = "Microsoft.Graph.Devices.CorporateManagement"
+        #     RequiredVersion = "1.8.0"
+        # },
+        # @{
+        #     ModuleName      = "Microsoft.Graph.Groups"
+        #     RequiredVersion = "1.8.0"
+        # },
+        # @{
+        #     ModuleName      = "Microsoft.Graph.Identity.DirectoryManagement"
+        #     RequiredVersion = "1.8.0"
+        # }
+        # @{
+        #     ModuleName      = "Microsoft.Graph.Identity.SignIns"
+        #     RequiredVersion = "1.8.0"
+        # },
+        # @{
+        #     ModuleName      = "Microsoft.Graph.Planner"
+        #     RequiredVersion = "1.8.0"
+        # },
+        # @{
+        #     ModuleName      = "Microsoft.Graph.Teams"
+        #     RequiredVersion = "1.8.0"
+        # },
+        # @{
+        #     ModuleName      = "Microsoft.Graph.Users"
+        #     RequiredVersion = "1.8.0"
+        # },
+        # @{
+        #     ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
+        #     RequiredVersion = "2.0.138"
+        # },
+        # @{
+        #     ModuleName      = "MicrosoftTeams"
+        #     RequiredVersion = "2.6.0"
+        # },
+        # @{
+        #     ModuleName      = "MSCloudLoginAssistant"
+        #     RequiredVersion = "1.0.73"
+        # },
+        # @{
+        #     ModuleName      = "PnP.PowerShell"
+        #     RequiredVersion = "1.8.0"
+        # },
+        # @{
+        #     ModuleName      = "ReverseDSC"
+        #     RequiredVersion = "2.0.0.7"
+        # }
+>>>>>>> 4cc99913... Fix graph profile acceptance
     )
 
     # Assemblies that must be loaded prior to importing this module
@@ -219,7 +301,85 @@
             # RequireLicenseAcceptance = $false
 
             # External dependent modules of this module
-            # ExternalModuleDependencies = @()
+            #TODO Can be deleted once module is hosted on powershellgallery
+            ExternalModuleDependencies = @(
+                @{
+                    ModuleName      = "DSCParser"
+                    RequiredVersion = "1.3.0.0"
+                },
+                @{
+                    ModuleName      = "ExchangeOnlineManagement"
+                    RequiredVersion = "2.0.5"
+                },
+                @{
+                    ModuleName      = "Microsoft.Graph.Applications"
+                    RequiredVersion = "1.8.0"
+                },
+                @{
+                    ModuleName      = "Microsoft.Graph.Authentication"
+                    RequiredVersion = "1.8.0"
+                },
+                @{
+                    ModuleName      = "Microsoft.Graph.DeviceManagement"
+                    RequiredVersion = "1.8.0"
+                },
+                @{
+                    ModuleName      = "Microsoft.Graph.DeviceManagement.Administration"
+                    RequiredVersion = "1.8.0"
+                },
+                @{
+                    ModuleName      = "Microsoft.Graph.DeviceManagement.Enrolment"
+                    RequiredVersion = "1.8.0"
+                },
+                @{
+                    ModuleName      = "Microsoft.Graph.Devices.CorporateManagement"
+                    RequiredVersion = "1.8.0"
+                },
+                @{
+                    ModuleName      = "Microsoft.Graph.Groups"
+                    RequiredVersion = "1.8.0"
+                },
+                @{
+                    ModuleName      = "Microsoft.Graph.Identity.DirectoryManagement"
+                    RequiredVersion = "1.8.0"
+                }
+                @{
+                    ModuleName      = "Microsoft.Graph.Identity.SignIns"
+                    RequiredVersion = "1.8.0"
+                },
+                @{
+                    ModuleName      = "Microsoft.Graph.Planner"
+                    RequiredVersion = "1.8.0"
+                },
+                @{
+                    ModuleName      = "Microsoft.Graph.Teams"
+                    RequiredVersion = "1.8.0"
+                },
+                @{
+                    ModuleName      = "Microsoft.Graph.Users"
+                    RequiredVersion = "1.8.0"
+                },
+                @{
+                    ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
+                    RequiredVersion = "2.0.138"
+                },
+                @{
+                    ModuleName      = "MicrosoftTeams"
+                    RequiredVersion = "2.6.0"
+                },
+                @{
+                    ModuleName      = "MSCloudLoginAssistant"
+                    RequiredVersion = "1.0.73"
+                },
+                @{
+                    ModuleName      = "PnP.PowerShell"
+                    RequiredVersion = "1.8.0"
+                },
+                @{
+                    ModuleName      = "ReverseDSC"
+                    RequiredVersion = "2.0.0.7"
+                }
+            )
 
         } # End of PSData hashtable
 
