@@ -683,8 +683,16 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("v1.0", "beta")]
+        $ProfileName = "v1.0"
     )
+
+    # Parameter is needed here because of mof file. Not really needed for anything else though so it's removed here
+    $PSBoundParameters.Remove('ProfileName') | Out-Null
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
