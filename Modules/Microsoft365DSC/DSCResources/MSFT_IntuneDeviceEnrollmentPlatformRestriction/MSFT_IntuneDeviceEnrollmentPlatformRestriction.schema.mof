@@ -29,7 +29,6 @@ class MSFT_IntuneDeviceEnrollmentPlatformRestriction : OMI_BaseResource
     [Write, Description("Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com")] String TenantId;
     [Write, Description("Secret of the Azure Active Directory tenant used for authentication.")] String ApplicationSecret;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
-    [Write, Description("Microsoft Graph profile used to access properties")] String ProfileName;
-
+    [Write, ValueMap{"v1.0","beta"},Values{"v1.0", "beta"},Description("Microsoft Graph profile used to access properties")] String ProfileName;
 };
 
