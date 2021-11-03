@@ -170,7 +170,7 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet("v1.0", "beta")]
-        $ProfileName = "v1.0"
+        $ProfileName = "beta"
     )
 
     Write-Verbose -Message "Checking for the Intune Device Compliance Windows 10 Policy {$DisplayName}"
@@ -443,7 +443,7 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet("v1.0", "beta")]
-        $ProfileName = "v1.0"
+        $ProfileName = "beta"
     )
 
     Write-Verbose -Message "Intune Device Compliance Windows 10 Policy {$DisplayName}"
@@ -688,10 +688,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet("v1.0", "beta")]
-        $ProfileName = "v1.0"
+        $ProfileName = "beta"
     )
 
-    # Parameter is needed here because of mof file. Not really needed for anything else though so it's removed here
+    # Paramenter is not needed. Don't remove because of mof file
     $PSBoundParameters.Remove('ProfileName') | Out-Null
 
     #region Telemetry
@@ -755,7 +755,7 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet("v1.0", "beta")]
-        $ProfileName = "v1.0"
+        $ProfileName = "beta"
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters -ProfileName $ProfileName

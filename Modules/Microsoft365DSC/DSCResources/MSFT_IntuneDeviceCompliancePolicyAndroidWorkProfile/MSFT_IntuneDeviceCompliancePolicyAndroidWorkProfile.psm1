@@ -139,7 +139,7 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet("v1.0", "beta")]
-        $ProfileName = "v1.0"
+        $ProfileName = "beta"
     )
 
     Write-Verbose -Message "Checking for the Intune Android Work Profile Device Compliance Policy {$DisplayName}"
@@ -373,7 +373,7 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet("v1.0", "beta")]
-        $ProfileName = "v1.0"
+        $ProfileName = "beta"
     )
 
    Write-Verbose -Message "Intune Android Work Profile Device Compliance Policy {$DisplayName}"
@@ -583,8 +583,16 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("v1.0", "beta")]
+        $ProfileName = "beta"
     )
+
+    # Paramenter is not needed. Don't remove because of mof file
+    $PSBoundParameters.Remove('ProfileName') | Out-Null
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
@@ -646,7 +654,7 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet("v1.0", "beta")]
-        $ProfileName = "v1.0"
+        $ProfileName = "beta"
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
