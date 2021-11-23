@@ -296,7 +296,7 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet("v1.0", "beta")]
-        $ProfileName = "v1.0"
+        $ProfileName = "beta"
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters -ProfileName $ProfileName
