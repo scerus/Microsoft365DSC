@@ -2,7 +2,7 @@
 *.user
 *.coverage
 .vs
-.vscode
+.vscode/*
 .psproj
 .sln
 Modules/Microsoft365DSC/DscResource.Tests
