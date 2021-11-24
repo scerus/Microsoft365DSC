@@ -206,6 +206,8 @@ function Set-TargetResource
         [ValidateSet("v1.0", "beta")]
         $ProfileName = "beta"
     )
+    Write-Output "Hallo hier ist die Funktion set target resource"
+    Write-Verbose -Message "Hallo ich bin verbos in set-target resource"
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters -ProfileName $ProfileName
