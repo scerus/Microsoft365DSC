@@ -1240,15 +1240,15 @@ function New-M365DSCConnection
             Write-Verbose -Message "Credential was specified. Connecting via User Principal"
             if ([System.String]::IsNullOrEmpty($Url))
             {
-                Test-MSCloudLogin -Platform $Platform `
-                    -CloudCredential $InboundParameters.Credential `
+                Connect-M365Tenant -Platform $Platform `
+                    -Credential $InboundParameters.Credential `
                     -SkipModuleReload $Global:CurrentModeIsExport `
                     -ProfileName $ProfileName
             }
             else
             {
-                Test-MSCloudLogin -Platform $Platform `
-                    -CloudCredential $InboundParameters.Credential `
+                Connect-M365Tenant -Platform $Platform `
+                    -Credential $InboundParameters.Credential `
                     -ConnectionUrl $Url `
                     -SkipModuleReload $Global:CurrentModeIsExport `
                     -ProfileName $ProfileName
@@ -1312,7 +1312,8 @@ function New-M365DSCConnection
             -TenantId $InboundParameters.TenantId `
             -CertificateThumbprint $InboundParameters.CertificateThumbprint `
             -SkipModuleReload $Global:CurrentModeIsExport `
-            -ProfileName $ProfileName
+            -ProfileName $ProfileName `
+            -Url $Url
         return "ServicePrincipalWithThumbprint"
     }
     else
@@ -1811,8 +1812,7 @@ function Assert-M365DSCBlueprint
         # types contained within the BluePrint;
         Write-Host "Initiating the Export of those ($($ResourcesInBluePrint.Length)) components from the tenant..."
         $TempExportName = (New-Guid).ToString() + ".ps1"
-        Export-M365DSCConfiguration -Quiet `
-            -Components $ResourcesInBluePrint `
+        Export-M365DSCConfiguration -Components $ResourcesInBluePrint `
             -Path $env:temp `
             -FileName $TempExportName `
             -Credential $Credentials

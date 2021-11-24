@@ -301,7 +301,7 @@ function Set-TargetResource
     $currentParameters.Remove("Ensure")  | Out-Null
     $currentParameters.Remove("Credential")  | Out-Null
 
-    if ($null -ne $KnownClientApplications)
+    if ($KnownClientApplications)
     {
         Write-Verbose -Message "Checking if the known client applications already exist."
         $testedKnownClientApplications = New-Object System.Collections.Generic.List[string]
@@ -338,7 +338,7 @@ function Set-TargetResource
     $currentParameters.Remove("AvailableToOtherTenants") | Out-Null
     $currentParameters.Remove("PublicClient") | Out-Null
 
-    if ($null -ne $currentParameters.KnownClientApplications)
+    if ($currentParameters.KnownClientApplications)
     {
         $apiValue = @{
             KnownClientApplications = $currentParameters.KnownClientApplications
@@ -346,14 +346,28 @@ function Set-TargetResource
         $currentParameters.Add("Api", $apiValue)
         $currentParameters.Remove("KnownClientApplications") | Out-Null
     }
-
-    if ($null -ne $ReplyUrls -or $null -ne $LogoutURL)
+    else
     {
-        $webValue = @{
-            RedirectUris = $currentParameters.ReplyURLs
-            LogoutUrl    = $currentParameters.LogoutURL
-            HomePageUrl  = $currentParameters.Homepage
+        $currentParameters.Remove("KnownClientApplications") | Out-Null
+    }
+
+    if ($ReplyUrls -or $LogoutURL -or $Homepage)
+    {
+        $webValue = @{}
+
+        if ($ReplyUrls)
+        {
+            $webValue.Add("RedirectUris", $currentParameters.ReplyURLs)
         }
+        if ($LogoutURL)
+        {
+            $webValue.Add("LogoutUrl", $currentParameters.LogoutURL)
+        }
+        if ($Homepage)
+        {
+            $webValue.Add("HomePageUrl", $currentParameters.Homepage)
+        }
+
         $currentParameters.Add("web", $webValue)
         $currentParameters.Remove("ReplyURLs") | Out-Null
         $currentParameters.Remove("LogoutURL") | Out-Null
@@ -382,6 +396,10 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentAADApp.Ensure -eq 'Present')
     {
         $currentParameters.Remove("ObjectId") | Out-Null
+
+        # Passing in the Oauth2RequirePostResponse parameter returns an error when calling update-mgapplication.
+        # Removing it temporarly for the update scenario.
+        $currentParameters.Remove("Oauth2RequirePostResponse") | Out-Null
         $currentParameters.Add("ApplicationId", $currentAADApp.ObjectId)
         Write-Verbose -Message "Updating existing AzureAD Application {$DisplayName} with values:`r`n$($currentParameters | Out-String)"
         Update-MgApplication @currentParameters
