@@ -206,61 +206,70 @@ function Set-TargetResource
         [ValidateSet("v1.0", "beta")]
         $ProfileName = "beta"
     )
-    Write-Output "Hallo hier ist die Funktion set target resource"
-    Write-Verbose -Message "Hallo ich bin verbos in set-target resource"
-
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters -ProfileName $ProfileName
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $currentPolicy = Get-TargetResource @PSBoundParameters
-    $PSBoundParameters.Remove("Ensure") | Out-Null
-    $PSBoundParameters.Remove("Credential") | Out-Null
-    $PSBoundParameters.Remove("ApplicationId") | Out-Null
-    $PSBoundParameters.Remove("TenantId") | Out-Null
-    $PSBoundParameters.Remove("ApplicationSecret") | Out-Null
-    if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
+    # Write-Output "Hallo hier ist die Funktion set target resource"
+    # Write-Verbose -Message "Hallo ich bin verbos in set-target resource"
+    $ErrorActionPreferance = 'Stop'
+    try
     {
-        Write-Verbose -Message "Creating new Device Configuration Policy {$DisplayName}"
-        $PSBoundParameters.Remove('DisplayName') | Out-Null
-        $PSBoundParameters.Remove('Description') | Out-Null
-        $AdditionalProperties = Get-M365DSCIntuneDeviceConfigurationProfileDomainJoinAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
-        New-MgDeviceManagementDeviceConfiguration -DisplayName $DisplayName `
-            -Description $Description `
-            -AdditionalProperties $AdditionalProperties
+
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters -ProfileName $ProfileName
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
+        $currentPolicy = Get-TargetResource @PSBoundParameters
+        $PSBoundParameters.Remove("Ensure") | Out-Null
+        $PSBoundParameters.Remove("Credential") | Out-Null
+        $PSBoundParameters.Remove("ApplicationId") | Out-Null
+        $PSBoundParameters.Remove("TenantId") | Out-Null
+        $PSBoundParameters.Remove("ApplicationSecret") | Out-Null
+        if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
+        {
+            Write-Verbose -Message "Creating new Device Configuration Policy {$DisplayName}"
+            $PSBoundParameters.Remove('DisplayName') | Out-Null
+            $PSBoundParameters.Remove('Description') | Out-Null
+            $AdditionalProperties = Get-M365DSCIntuneDeviceConfigurationProfileDomainJoinAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+            New-MgDeviceManagementDeviceConfiguration -DisplayName $DisplayName `
+                -Description $Description `
+                -AdditionalProperties $AdditionalProperties
+        }
+        elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
+        {
+            Write-Verbose -Message "Updating existing Device Configuration Policy {$DisplayName}"
+            $configDevicePolicy = Get-MgDeviceManagementDeviceConfiguration `
+                -ErrorAction Stop | Where-Object `
+                -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windowsDomainJoinConfiguration' -and `
+                    $_.displayName -eq $($DisplayName) }
+
+            $PSBoundParameters.Remove('DisplayName') | Out-Null
+            $PSBoundParameters.Remove('Description') | Out-Null
+            $AdditionalProperties = Get-M365DSCIntuneDeviceConfigurationProfileDomainJoinAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+            Update-MgDeviceManagementDeviceConfiguration -AdditionalProperties $AdditionalProperties `
+                -Description $Description `
+                -DeviceConfigurationId $configDevicePolicy.Id
+        }
+        elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
+        {
+            Write-Verbose -Message "Removing Device Configuration Policy {$DisplayName}"
+            $configDevicePolicy = Get-MgDeviceManagementDeviceConfiguration `
+                -ErrorAction Stop | Where-Object `
+                -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windowsDomainJoinConfiguration' -and `
+                    $_.displayName -eq $($DisplayName) }
+
+            Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $configDevicePolicy.Id
+        }
+
     }
-    elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
+    catch
     {
-        Write-Verbose -Message "Updating existing Device Configuration Policy {$DisplayName}"
-        $configDevicePolicy = Get-MgDeviceManagementDeviceConfiguration `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windowsDomainJoinConfiguration' -and `
-                $_.displayName -eq $($DisplayName) }
-
-        $PSBoundParameters.Remove('DisplayName') | Out-Null
-        $PSBoundParameters.Remove('Description') | Out-Null
-        $AdditionalProperties = Get-M365DSCIntuneDeviceConfigurationProfileDomainJoinAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
-        Update-MgDeviceManagementDeviceConfiguration -AdditionalProperties $AdditionalProperties `
-            -Description $Description `
-            -DeviceConfigurationId $configDevicePolicy.Id
-    }
-    elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
-    {
-        Write-Verbose -Message "Removing Device Configuration Policy {$DisplayName}"
-        $configDevicePolicy = Get-MgDeviceManagementDeviceConfiguration `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windowsDomainJoinConfiguration' -and `
-                $_.displayName -eq $($DisplayName) }
-
-        Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $configDevicePolicy.Id
+        Out-File -Path 'C:\Users\KiesswetterReinhard\test\chef-zero-repo\error.txt' "Message: [$($_.Exception.Message)"]
     }
 }
 function Test-TargetResource
@@ -489,7 +498,7 @@ function Get-M365DSCIntuneDeviceConfigurationProfileDomainJoinAdditionalProperti
         $Properties
     )
 
-    $results = @{"@odata.type" = "#microsoft.graph.windowsDomainJoinConfiguration"}
+    $results = @{"@odata.type" = "#microsoft.graph.windowsDomainJoinConfiguration" }
     foreach ($property in $properties.Keys)
     {
         if ($property -ne 'Verbose')
